@@ -14,27 +14,36 @@ function ready() {
     loader.style.display = "none";
     run_element.style.display = "block";
     isReady = true;
-
-    console.log(stdout.parentNode.dataset.replicatedValue)
 }
 
 function run_() {
     if(!isReady)
         return;
 
-    stdout.value = "";
-    stderr.value = "";
+    isReady = false;
+    run_element.disabled = true;
+
+    stdout.innerText = "";
+    stderr.innerText = "";
 
     let algorithm = document.querySelector('input[name="algorithm"]:checked').value;
     let enumerate = document.getElementById("option-enumerate").checked ? 'e' : ' ';
     let verbose = document.getElementById("option-verbose").checked ? 'v' : ' ';
     let print_options = document.getElementById("option-print").checked ? 'p' : ' ';
-    Module.solve(input.value, algorithm, enumerate, verbose, print_options);
+    Module.solve(input.innerText, algorithm, enumerate, verbose, print_options);
+
+    isReady = true;
+    run_element.disabled = false;
+}
+
+function matchError(e) {
+    let matcher = /^\[XCC\] \[ERROR\] Parse error at (\d+):(\d+)/g;
+    let arr = matcher.exec(e);
 }
 
 var Module = {
-    'print': function(text) { stdout.value += text + "\n"; stdout.parentNode.dataset.replicatedValue = stdout.value; },
-    'printErr': function(text) { stderr.value += text + "\n"; stderr.parentNode.dataset.replicatedValue = stderr.value; },
+    'print': function(text) { stdout.innerHTML += text + "<br>"; },
+    'printErr': function(text) { stderr.innerHTML += text + "<br>"; matchError(text) },
     'onRuntimeInitialized': function() { ready(); }
 };
 
