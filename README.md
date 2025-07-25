@@ -1,5 +1,7 @@
 # XCCSolve
 
+[Please refer to the newer version over at MiniExact!](https://github.com/miniexact/miniexact)
+
 Solve exact cover problems and expand upon a flexible ground implementation!
 
 ## Compiling
